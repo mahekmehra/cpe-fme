@@ -4,6 +4,10 @@ from app.schemas.violation_schema import (
     ViolationRequest
 )
 
+from app.schemas.prediction_response import (
+    PredictionResponse
+)
+
 from app.services.prediction_service import (
     PredictionService
 )
@@ -29,8 +33,54 @@ def version():
     }
 
 
-@router.post("/predict")
-def predict(
-       "/predict",
+@router.post(
+    "/predict",
     response_model=PredictionResponse
 )
+def predict(
+    request: ViolationRequest
+):
+
+    return (
+        PredictionService.predict(
+            request.model_dump()
+        )
+    )
+
+
+@router.get("/test-gemini")
+def test_gemini():
+
+    from app.services.gemini_service import (
+        GeminiService
+    )
+
+    result = (
+        GeminiService.generate_dispatch(
+            {
+                "latitude": 12.97,
+                "longitude": 77.59,
+                "police_station": "UPPARPET",
+                "junction_name": "NO JUNCTION"
+            },
+            0.95
+        )
+    )
+
+    return {"response": result}
+
+@router.get("/env-check")
+def env_check():
+
+    import os
+
+    return {
+        "gemini_key_loaded":
+            bool(
+                os.getenv(
+                    "GEMINI_API_KEY"
+                )
+            )
+    }
+
+    

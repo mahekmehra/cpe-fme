@@ -1,13 +1,22 @@
 from app.core.model_loader import registry
+
 from app.services.feature_engineering import (
     FeatureEngineeringService
+)
+
+from app.services.gemini_service import (
+    GeminiService
+)
+
+from app.services.dispatch_service import (
+    DispatchService
 )
 
 
 class PredictionService:
 
     @staticmethod
-    def predict(payload: dict):
+    def predict(payload):
 
         X = (
             FeatureEngineeringService
@@ -23,10 +32,53 @@ class PredictionService:
             .predict_proba(X)[0][1]
         )
 
-        return {
-            "prediction": int(prediction),
-            "probability": round(
-                float(probability),
-                4
+        probability = round(
+            float(probability),
+            4
+        )
+
+        if probability >= 0.70:
+
+            risk_level = "HIGH"
+
+        elif probability >= 0.40:
+
+            risk_level = "MEDIUM"
+
+        else:
+
+            risk_level = "LOW"
+
+        dispatch = None
+
+        if probability >= 0.70:
+
+            raw_response = (
+                GeminiService
+                .generate_dispatch(
+                    payload,
+                    probability
+                )
             )
+
+            dispatch = (
+                DispatchService
+                .parse_response(
+                    raw_response
+                )
+            )
+
+        return {
+
+            "prediction":
+                int(prediction),
+
+            "probability":
+                probability,
+
+            "risk_level":
+                risk_level,
+
+            "dispatch":
+                dispatch
         }
