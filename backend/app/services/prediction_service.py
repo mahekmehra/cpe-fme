@@ -23,6 +23,7 @@ class PredictionService:
             .create_feature_vector(payload)
         )
 
+
         prediction = (
             registry.model.predict(X)[0]
         )
@@ -32,10 +33,7 @@ class PredictionService:
             .predict_proba(X)[0][1]
         )
 
-        probability = round(
-            float(probability),
-            4
-        )
+        probability =  float(probability)
 
         if probability >= 0.70:
 

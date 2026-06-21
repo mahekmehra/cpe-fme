@@ -18,6 +18,12 @@ class ViolationRequest(BaseModel):
 
     created_datetime: str
 
+    location: str
+
+    vehicle_type: str
+
+    violation_type: str
+
     police_station: str
 
     junction_name: str
