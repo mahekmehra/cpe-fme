@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from app.core.model_loader import registry
 
 from app.schemas.violation_schema import (
     ViolationRequest
@@ -83,4 +84,24 @@ def env_check():
             )
     }
 
-    
+@router.get("/metadata")
+def metadata():
+
+    return {
+
+        "stations":
+
+            sorted(
+                list(
+                    registry.station_map.keys()
+                )
+            ),
+
+        "junctions":
+
+            sorted(
+                list(
+                    registry.junction_map.keys()
+                )
+            )
+    }

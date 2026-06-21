@@ -8,6 +8,8 @@ export default function DispatchPanel({
 
       <div className="
         bg-slate-800
+        border-l-4
+        border-blue-500
         rounded-xl
         p-6
       ">

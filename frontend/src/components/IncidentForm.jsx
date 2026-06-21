@@ -1,78 +1,249 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 
 export default function IncidentForm({
   onSubmit,
-  loading
+  loading,
+  stations,
+  junctions
 }) {
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] =
+    useState({
 
-    latitude: "12.9716",
-    longitude: "77.5946",
+      latitude: "12.9716",
 
-    created_datetime:
-      "2026-06-21 18:30:00",
+      longitude: "77.5946",
 
-    location:
-      "MG Road Metro Station",
+      location:
+        "MG Road Metro Station",
 
-    vehicle_type:
-      "CAR",
+      vehicle_type:
+        "CAR",
 
-    violation_type:
-      "NO PARKING",
+      violation_type:
+        "NO PARKING",
 
-    police_station:
-      "Upparpet",
+      police_station:
+        "",
 
-    junction_name:
-      "No Junction"
-  });
-
-  const handleChange = (e) => {
-
-    setFormData({
-
-      ...formData,
-
-      [e.target.name]:
-        e.target.value
+      junction_name:
+        ""
     });
-  };
+
+    useEffect(() => {
+
+        if (
+        stations.length > 0
+        ) {
+
+            setFormData(
+                previous => ({
+
+                ...previous,
+
+                police_station:
+                    stations[0]
+                })
+            );
+        }
+
+    }, [stations]);
+
+  // ADD SECOND useEffect HERE
+
+    useEffect(() => {
+
+        if (
+        junctions.length > 0
+        ) {
+
+            setFormData(
+                previous => ({
+
+                ...previous,
+
+                junction_name:
+                    junctions[0]
+                })
+            );
+        }
+
+    }, [junctions]);
+
+  const handleChange =
+    (e) => {
+
+      setFormData({
+
+        ...formData,
+
+        [e.target.name]:
+          e.target.value
+      });
+    };
+
+  const submitData =
+    () => {
+
+      onSubmit({
+
+        ...formData,
+
+        created_datetime:
+
+          new Date()
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " ")
+      });
+    };
 
   return (
 
-    <div className="bg-slate-800 rounded-xl p-6">
+    <div className="
+      bg-slate-800
+      rounded-xl
+      p-6
+    ">
 
-      <h2 className="text-2xl font-bold mb-4">
+      <h2 className="
+        text-2xl
+        font-bold
+        mb-4
+      ">
         Incident Input
       </h2>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="
+        grid
+        grid-cols-2
+        gap-4
+      ">
 
-        {Object.keys(formData).map((field) => (
+        <input
+          name="latitude"
+          value={formData.latitude}
+          onChange={handleChange}
+          className="bg-slate-700 p-3 rounded"
+        />
 
-          <input
-            key={field}
-            name={field}
-            value={formData[field]}
-            onChange={handleChange}
-            placeholder={field}
+        <input
+          name="longitude"
+          value={formData.longitude}
+          onChange={handleChange}
+          className="bg-slate-700 p-3 rounded"
+        />
+
+        <input
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          className="bg-slate-700 p-3 rounded"
+        />
+
+        <select
+          name="vehicle_type"
+          value={formData.vehicle_type}
+          onChange={handleChange}
+          className="bg-slate-700 p-3 rounded"
+        >
+
+          <option>CAR</option>
+          <option>BUS</option>
+          <option>TRUCK</option>
+          <option>TWO WHEELER</option>
+
+        </select>
+
+        <select
+          name="violation_type"
+          value={formData.violation_type}
+          onChange={handleChange}
+          className="bg-slate-700 p-3 rounded"
+        >
+
+          <option>NO PARKING</option>
+          <option>WRONG PARKING</option>
+          <option>OBSTRUCTION</option>
+
+        </select>
+
+        <select
+
+            name="police_station"
+
+            value={
+                formData.police_station
+            }
+
+            onChange={
+                handleChange
+            }
+
             className="
-              bg-slate-700
-              p-3
-              rounded
+                bg-slate-700
+                p-3
+                rounded
             "
-          />
-        ))}
+        >
+
+            {
+                stations.map(
+                    station => (
+
+                        <option
+                        key={station}
+                        value={station}
+                        >
+                        {station}
+                        </option>
+                    )
+                )
+            }
+
+        </select>       
+
+        <select
+
+            name="junction_name"
+
+            value={
+                formData.junction_name
+            }
+
+            onChange={
+                handleChange
+            }
+
+            className="
+                bg-slate-700
+                p-3
+                rounded
+            "
+        >
+
+            {
+                junctions.map(
+                    junction => (
+
+                        <option
+                        key={junction}
+                        value={junction}
+                        >
+                        {junction}
+                        </option>
+                    )
+                )
+            }
+
+        </select>
 
       </div>
 
       <button
 
-        onClick={() =>
-          onSubmit(formData)
-        }
+        onClick={submitData}
 
         disabled={loading}
 
@@ -85,11 +256,13 @@ export default function IncidentForm({
           hover:bg-blue-500
         "
       >
+
         {
-            loading
+          loading
             ? "Generating AI Analysis..."
             : "Analyze Incident"
         }
+
       </button>
 
     </div>

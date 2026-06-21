@@ -22,7 +22,19 @@ export default function PredictionCard({
     (
       result.probability * 100
     ).toFixed(2);
+ 
+  const progressColor =
 
+    result.risk_level === "HIGH"
+
+        ? "bg-red-500"
+
+        : result.risk_level === "MEDIUM"
+
+        ? "bg-yellow-500"
+
+        : "bg-green-500";
+        
   return (
 
     <div className="
@@ -65,16 +77,15 @@ export default function PredictionCard({
 
           <div
 
-            className="
-              bg-blue-500
-              h-4
-              rounded-full
-              transition-all
-            "
-
+            className={`
+            h-4
+            rounded-full
+            transition-all
+            ${progressColor}
+            `}
             style={{
-              width:
-                `${percentage}%`
+            width:
+            `${percentage}%`
             }}
           />
 
@@ -88,11 +99,34 @@ export default function PredictionCard({
           Risk Classification
         </p>
 
+
         <RiskBadge
           risk={
             result.risk_level
           }
         />
+
+      </div>
+      <div className="mt-6">
+
+        <p className="
+            text-slate-400
+            text-sm
+        ">
+            Model Decision
+        </p>
+
+        <p className="
+            text-xl
+            font-bold
+            mt-1
+        ">
+            {
+            result.prediction === 1
+                ? "BOTTLENECK LIKELY"
+                : "NO BOTTLENECK DETECTED"
+            }
+        </p>
 
       </div>
 

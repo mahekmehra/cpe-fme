@@ -1,19 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import StatsCard from
-  "../components/StatsCard";
+import StatsCard from "../components/StatsCard";
+import IncidentForm from "../components/IncidentForm";
+import PredictionCard from "../components/PredictionCard";
+import DispatchPanel from "../components/DispatchPanel";
+import LocationMap from "../components/LocationMap";
+import TrafficChart from "../components/TrafficChart";
 
-import IncidentForm from
-  "../components/IncidentForm";
 
-import PredictionCard from
-  "../components/PredictionCard";
+import API from "../services/api";
 
-import DispatchPanel from
-  "../components/DispatchPanel";
+import {
+  getHealth,
+  getVersion
+} from "../services/systemService";
 
-import API from
-  "../services/api";
+import { 
+    getMetadata 
+} from "../services/metadataService";
 
 export default function Dashboard() {
 
@@ -23,12 +27,118 @@ export default function Dashboard() {
   const [loading, setLoading] =
     useState(false);
 
+  const [health, setHealth] =
+    useState(null);
+
+  const [version, setVersion] =
+    useState(null);
+
+  const [stations, setStations] =
+    useState([]);
+
+  const [junctions, setJunctions] =
+    useState([]);
+
+  const [history, setHistory] =
+    useState([
+
+        {
+          time: "08:00",
+          risk: 35
+        },
+
+        {
+          time: "10:00",
+          risk: 48
+        },
+
+        {
+          time: "12:00",
+          risk: 42
+        },
+
+        {
+          time: "14:00",
+          risk: 61
+        },
+
+        {
+          time: "16:00",
+          risk: 74
+        }
+    ]);
+
+  const [coordinates, setCoordinates] =
+    useState({
+
+      latitude: 12.9716,
+
+      longitude: 77.5946
+    });
+
+  useEffect(() => {
+
+    const loadSystemInfo =
+      async () => {
+
+        try {
+
+          const healthData =
+            await getHealth();
+
+          const versionData =
+            await getVersion();
+
+          setHealth(
+            healthData
+          );
+
+          setVersion(
+            versionData
+          );
+
+          const metadata =
+            await getMetadata();
+
+          setStations(
+            metadata.stations
+          );
+
+          setJunctions(
+            metadata.junctions
+          );
+
+        } catch (error) {
+
+          console.error(
+            error
+          );
+        }
+      };
+
+    loadSystemInfo();
+
+  }, []);
+
   const submitIncident =
     async (payload) => {
 
       try {
 
         setLoading(true);
+
+        setCoordinates({
+
+          latitude:
+            Number(
+              payload.latitude
+            ),
+
+          longitude:
+            Number(
+              payload.longitude
+            )
+        });
 
         const response =
           await API.post(
@@ -40,9 +150,38 @@ export default function Dashboard() {
           response.data
         );
 
+        setHistory(
+
+            previous => [
+
+                ...previous,
+
+                {
+
+                    time:
+
+                    new Date()
+                    .toLocaleTimeString(),
+
+                    risk:
+
+                        Number(
+
+                            (
+                            response.data
+                            .probability * 100
+                            ).toFixed(2)
+
+                        )
+                }
+            ]
+        );
+
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          error
+        );
 
       } finally {
 
@@ -59,56 +198,94 @@ export default function Dashboard() {
       p-8
     ">
 
-      <h1 className="
-        text-5xl
-        font-bold
-      ">
-        AI Traffic Intelligence Dashboard
-      </h1>
+      {/* Header */}
 
-      <p className="
-        text-slate-400
-        mt-2
-      ">
-        Smart City Operations Center
-      </p>
+      <div>
+
+        <h1 className="
+          text-5xl
+          font-bold
+        ">
+          AI Traffic Intelligence Dashboard
+        </h1>
+
+        <p className="
+          text-slate-400
+          mt-3
+        ">
+          Smart City Traffic Operations Center
+        </p>
+
+      </div>
+
+      {/* Status Cards */}
 
       <div className="
         grid
-        grid-cols-3
+        grid-cols-1
+        md:grid-cols-3
         gap-6
         mt-10
       ">
 
         <StatsCard
-          title="Backend"
-          value="ONLINE"
+          title="Backend Status"
+          value={
+            health?.status === "healthy"
+
+            ? "ONLINE"
+
+            : "OFFLINE"
+          }
         />
 
         <StatsCard
-          title="Model"
-          value="v2"
+          title="Model Version"
+          value={
+            version?.model_version
+              || "..."
+          }
         />
 
         <StatsCard
-          title="Gemini"
-          value="ONLINE"
+          title="AI Engine"
+          value={
+            health?.model_loaded
+
+            ? "READY"
+
+            : "LOADING"
+          }
         />
 
       </div>
 
+      {/* Form + Prediction */}
+
       <div className="
         grid
-        grid-cols-2
+        grid-cols-1
+        lg:grid-cols-2
         gap-6
         mt-10
       ">
 
         <IncidentForm
-          onSubmit={
-            submitIncident
-          }
-          loading={loading}
+            onSubmit={
+                submitIncident
+            }
+
+            loading={
+                loading
+            }
+
+            stations={
+                stations
+            }
+
+            junctions={
+                junctions
+            }
         />
 
         <PredictionCard
@@ -116,6 +293,36 @@ export default function Dashboard() {
         />
 
       </div>
+
+      {/* Map */}
+
+      <div className="mt-6">
+
+        <LocationMap
+
+          latitude={
+            coordinates.latitude
+          }
+
+          longitude={
+            coordinates.longitude
+          }
+
+        />
+
+      </div>
+
+      {/* Chart */}
+
+      <div className="mt-6">
+
+        <TrafficChart
+            history={history}
+        />
+
+      </div>
+
+      {/* Dispatch */}
 
       <div className="mt-6">
 
