@@ -85,9 +85,11 @@ export default function IncidentForm({
           hover:bg-blue-500
         "
       >
-        {loading
-          ? "Analyzing..."
-          : "Analyze Incident"}
+        {
+            loading
+            ? "Generating AI Analysis..."
+            : "Analyze Incident"
+        }
       </button>
 
     </div>

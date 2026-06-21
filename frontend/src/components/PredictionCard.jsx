@@ -1,3 +1,5 @@
+import RiskBadge from "./RiskBadge";
+
 export default function PredictionCard({
   result
 }) {
@@ -16,6 +18,11 @@ export default function PredictionCard({
     );
   }
 
+  const percentage =
+    (
+      result.probability * 100
+    ).toFixed(2);
+
   return (
 
     <div className="
@@ -24,30 +31,70 @@ export default function PredictionCard({
       p-6
     ">
 
-      <h2 className="text-2xl font-bold">
+      <h2 className="
+        text-2xl
+        font-bold
+      ">
         Prediction Result
       </h2>
 
-      <p className="mt-4">
+      <div className="mt-6">
 
-        Probability:
+        <div className="
+          flex
+          justify-between
+          mb-2
+        ">
 
-        {" "}
+          <span>
+            Bottleneck Probability
+          </span>
 
-        {(result.probability * 100)
-          .toFixed(2)}%
+          <span>
+            {percentage}%
+          </span>
 
-      </p>
+        </div>
 
-      <p className="mt-2">
+        <div className="
+          w-full
+          bg-slate-700
+          rounded-full
+          h-4
+        ">
 
-        Risk Level:
+          <div
 
-        {" "}
+            className="
+              bg-blue-500
+              h-4
+              rounded-full
+              transition-all
+            "
 
-        {result.risk_level}
+            style={{
+              width:
+                `${percentage}%`
+            }}
+          />
 
-      </p>
+        </div>
+
+      </div>
+
+      <div className="mt-8">
+
+        <p className="mb-3">
+          Risk Classification
+        </p>
+
+        <RiskBadge
+          risk={
+            result.risk_level
+          }
+        />
+
+      </div>
 
     </div>
   );
