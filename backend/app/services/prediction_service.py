@@ -49,7 +49,7 @@ class PredictionService:
 
         dispatch = None
 
-        if probability >= 0.70:
+        if probability >= 0.40:
 
             raw_response = (
                 GeminiService
