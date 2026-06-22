@@ -1,49 +1,47 @@
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
+*.pyo
+*.pyd
 
-# Virtual Environments
+# Virtual Environment
 venv/
 .venv/
-env/
-ENV/
 
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# Environment Variables
+# Environment Files
 .env
+frontend/.env
 
-# Build
-build/
-dist/
-*.egg-info/
+# Model Artifacts
+*.joblib
 
 # Jupyter
 .ipynb_checkpoints/
 
-# Testing
-.pytest_cache/
+# Logs
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Node
+frontend/node_modules/
+
+# Build
+frontend/dist/
+
+# Coverage
 .coverage
+htmlcov/
 
-# Model Artifacts
-artifacts/model_v2.pkl
-artifacts/*.joblib
-artifacts/*.pkl
+# Cache
+.pytest_cache/
+.mypy_cache/
 
-# Large datasets
-data/
-*.csv
-
-# Temporary files
-tmp/
+# Temporary
 temp/
+tmp/
