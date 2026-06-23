@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 export default function IncidentForm({
   onSubmit,
   loading,
-  stations,
-  junctions
+  stations = [],
+  junctions = [],
+  vehicleTypes = [],
+  violationTypes = []
 }) {
 
   const [formData, setFormData] =
@@ -19,10 +21,10 @@ export default function IncidentForm({
         "MG Road Metro Station",
 
       vehicle_type:
-        "CAR",
+        "",
 
       violation_type:
-        "NO PARKING",
+        "",
 
       police_station:
         "",
@@ -70,6 +72,43 @@ export default function IncidentForm({
         }
 
     }, [junctions]);
+
+    useEffect(() => {
+
+        if (
+            vehicleTypes.length > 0
+        ) {
+
+            setFormData(
+                previous => ({
+
+                ...previous,
+
+                vehicle_type:
+                    vehicleTypes[0]
+                })
+            );
+       }
+    }, [vehicleTypes]);
+
+    useEffect(() => {
+
+        if (
+            violationTypes.length > 0
+        ) {
+
+            setFormData(
+                previous => ({
+
+                ...previous,
+
+                violation_type:
+                    violationTypes[0]
+                })
+            );
+        }
+
+    }, [violationTypes]);
 
   const handleChange =
     (e) => {
@@ -149,10 +188,19 @@ export default function IncidentForm({
           className="bg-slate-700 p-3 rounded"
         >
 
-          <option>CAR</option>
-          <option>BUS</option>
-          <option>TRUCK</option>
-          <option>TWO WHEELER</option>
+          {
+            vehicleTypes.map(
+              vehicle => (
+
+                <option
+                  key={vehicle}
+                  value={vehicle}
+                >
+                  {vehicle}
+                </option>
+              )
+            )
+          }
 
         </select>
 
@@ -163,9 +211,19 @@ export default function IncidentForm({
           className="bg-slate-700 p-3 rounded"
         >
 
-          <option>NO PARKING</option>
-          <option>WRONG PARKING</option>
-          <option>OBSTRUCTION</option>
+          {
+            violationTypes.map(
+              violation => (
+
+                <option
+                  key={violation}
+                  value={violation}
+                >
+                  {violation}
+                </option>
+              )
+            )
+          }
 
         </select>
 

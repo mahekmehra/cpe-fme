@@ -39,6 +39,12 @@ export default function Dashboard() {
   const [junctions, setJunctions] =
     useState([]);
 
+  const [vehicleTypes, setVehicleTypes] =
+    useState([]);
+
+  const [violationTypes, setViolationTypes] =
+    useState([]);
+
   const [history, setHistory] =
     useState([
 
@@ -106,6 +112,14 @@ export default function Dashboard() {
 
           setJunctions(
             metadata.junctions
+          );
+
+          setVehicleTypes(
+            metadata.vehicle_types || []
+          );
+
+          setViolationTypes(
+            metadata.violation_types || []
           );
 
         } catch (error) {
@@ -285,6 +299,14 @@ export default function Dashboard() {
 
             junctions={
                 junctions
+            }
+
+            vehicleTypes={
+                vehicleTypes
+            }
+
+            violationTypes={
+                violationTypes
             }
         />
 

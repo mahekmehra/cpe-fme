@@ -20,16 +20,11 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-function ChangeView({
-  center
-}) {
+function ChangeView({ center }) {
 
   const map = useMap();
 
-  map.setView(
-    center,
-    14
-  );
+  map.setView(center, 14);
 
   return null;
 }
@@ -39,28 +34,37 @@ export default function LocationMap({
   longitude
 }) {
 
+  // Safe conversion
+  const lat = Number(latitude);
+  const lng = Number(longitude);
+
+  // Bengaluru fallback
   const center = [
-    latitude,
-    longitude
+    isNaN(lat) ? 12.9716 : lat,
+    isNaN(lng) ? 77.5946 : lng
   ];
 
   return (
-
-    <div className="
+    <div
+      className="
       bg-slate-800
       rounded-xl
       p-6
-    ">
+    "
+    >
 
-      <h2 className="
+      <h2
+        className="
         text-2xl
         font-bold
         mb-4
-      ">
+      "
+      >
         Incident Location
       </h2>
 
       <MapContainer
+        key={`${center[0]}-${center[1]}`}
         center={center}
         zoom={14}
         style={{
@@ -69,22 +73,21 @@ export default function LocationMap({
         }}
       >
 
-        <ChangeView
-          center={center}
-        />
+        <ChangeView center={center} />
 
         <TileLayer
+          attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <Marker
-          position={center}
-        >
-
+        <Marker position={center}>
           <Popup>
             Traffic Incident
+            <br />
+            Lat: {center[0]}
+            <br />
+            Long: {center[1]}
           </Popup>
-
         </Marker>
 
       </MapContainer>

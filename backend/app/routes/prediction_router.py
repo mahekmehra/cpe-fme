@@ -89,6 +89,39 @@ def metadata():
 
     return {
 
+        "vehicle_types": [
+
+            "CAR",
+            "TWO WHEELER",
+            "AUTO",
+            "BUS",
+            "TRUCK",
+            "TANKER",
+            "MAXI-CAB",
+            "TEMPO",
+            "TRACTOR",
+            "GOODS VEHICLE",
+            "LCV",
+            "HCV"
+        ],
+
+        "violation_types": [
+
+            "NO PARKING",
+            "WRONG PARKING",
+            "DOUBLE PARKING",
+            "OBSTRUCTION",
+            "PARKING IN A MAIN ROAD",
+            "PARKING NEAR ROAD CROSSING",
+            "PARKING NEAR TRAFFIC SIGNAL",
+            "PARKING NEAR BUS STOP",
+            "PARKING ON FOOTPATH",
+            "PARKING AT JUNCTION",
+            "PARKING NEAR U TURN",
+            "PARKING NEAR PEDESTRIAN CROSSING"
+        ],
+
+
         "stations":
 
             sorted(
