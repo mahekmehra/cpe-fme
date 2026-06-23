@@ -46,33 +46,7 @@ export default function Dashboard() {
     useState([]);
 
   const [history, setHistory] =
-    useState([
-
-        {
-          time: "08:00",
-          risk: 35
-        },
-
-        {
-          time: "10:00",
-          risk: 48
-        },
-
-        {
-          time: "12:00",
-          risk: 42
-        },
-
-        {
-          time: "14:00",
-          risk: 61
-        },
-
-        {
-          time: "16:00",
-          risk: 74
-        }
-    ]);
+  useState([]);
 
   const [coordinates, setCoordinates] =
     useState({
@@ -164,32 +138,43 @@ export default function Dashboard() {
           response.data
         );
 
-        setHistory(
+        setHistory([
 
-            previous => [
+            {
+              time: "08:00",
+              risk: 35
+            },
 
-                ...previous,
+            {
+              time: "10:00",
+              risk: 48
+            },
 
-                {
+            {
+              time: "12:00",
+              risk: 42
+            },
 
-                    time:
+            {
+              time: "14:00",
+              risk: 61
+            },
 
-                    new Date()
-                    .toLocaleTimeString(),
+            {
+              time: "16:00",
+              risk: 74
+            },
 
-                    risk:
+            {
+              time: "Current",
+              risk: Number(
+                (
+                  response.data.probability * 100
+                ).toFixed(2)
+              )
+            }
 
-                        Number(
-
-                            (
-                            response.data
-                            .probability * 100
-                            ).toFixed(2)
-
-                        )
-                }
-            ]
-        );
+        ]);
 
       } catch (error) {
 
@@ -336,13 +321,19 @@ export default function Dashboard() {
 
       {/* Chart */}
 
-      <div className="mt-6">
+      {
+        history.length > 0 && (
 
-        <TrafficChart
-            history={history}
-        />
+          <div className="mt-6">
 
-      </div>
+            <TrafficChart
+              history={history}
+            />
+
+          </div>
+
+        )
+      }
 
       {/* Dispatch */}
 
